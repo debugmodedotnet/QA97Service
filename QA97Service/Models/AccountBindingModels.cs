@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+using QA97Service.Entities;
 
 namespace QA97Service.Models
 {
@@ -48,6 +49,12 @@ namespace QA97Service.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        public int? SchoolId { get; set; }
+        public virtual School School { get; set; }
+
+        public string CityName { get; set; }
+        public string FullName { get; set; }
     }
 
     public class RegisterExternalBindingModel

@@ -66,6 +66,7 @@ namespace QA97Service.Entities
         public virtual Subject Subject { get; set; }
 
         public virtual School School { get; set; }
+        
 
         public virtual ApplicationUser User { get; set; }
 

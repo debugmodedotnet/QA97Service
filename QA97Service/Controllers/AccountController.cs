@@ -345,7 +345,7 @@ namespace QA97Service.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email};
+            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email,FullName=model.FullName};
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
 
