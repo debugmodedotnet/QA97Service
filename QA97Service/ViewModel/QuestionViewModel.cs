@@ -16,6 +16,7 @@ namespace QA97Service.ViewModel
         public int Score { get; set; }
         public string UserName { get; set; }
         public string UserId { get; set; }
+        public string UserImage { get; set; }
         public DateTime CreatedDate { get; set; }
         public int ClassId { get; set; }
         public string ClassName { get; set; }

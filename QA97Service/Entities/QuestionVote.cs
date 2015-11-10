@@ -33,7 +33,7 @@ namespace QA97Service.Entities
 
         public string UserId { get; set; }
 
-        [Required]
+        //[Required]
     
         public virtual ApplicationUser User { get; set; }
     }

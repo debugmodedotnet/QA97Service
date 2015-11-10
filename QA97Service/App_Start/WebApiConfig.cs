@@ -17,7 +17,7 @@ namespace QA97Service
             // Configure Web API to use only bearer token authentication.
             config.SuppressDefaultHostAuthentication();
             config.Filters.Add(new HostAuthenticationFilter(OAuthDefaults.AuthenticationType));
-            var cors = new EnableCorsAttribute("http://localhost:5901", "*", "*");
+            var cors = new EnableCorsAttribute("*", "*", "*");
            
             config.EnableCors(cors);
             // Web API routes

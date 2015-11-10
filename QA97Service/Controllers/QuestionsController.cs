@@ -42,6 +42,7 @@ namespace QA97Service.Controllers
                 ClassName = r.Class.Name,
                 UserId = r.User.UserName,
                 UserName = r.User.FullName,
+               
                 CreatedDate = r.CreatedDate,
                 DetailPlainText = r.QuestionDetailPlainText,
                 DetailRichText=r.QuestionDetailRichText,
@@ -185,7 +186,8 @@ namespace QA97Service.Controllers
                 ClassId = r.ClassId,
                 ClassName = r.Class.Name,               
                 UserId = r.UserId,
-                UserName = r.User.FullName,
+                UserName = r.User.FullName,                
+            
                 CreatedDate = r.CreatedDate,
                 DetailPlainText = r.QuestionDetailPlainText,
                 DetailRichText = r.QuestionDetailRichText,
@@ -221,6 +223,7 @@ namespace QA97Service.Controllers
                 ClassName = r.Class.Name,
                 UserId = r.UserId,
                 UserName = r.User.FullName,
+            
                 CreatedDate = r.CreatedDate,
                 DetailPlainText = r.QuestionDetailPlainText,
                 DetailRichText = r.QuestionDetailRichText,
@@ -255,6 +258,7 @@ namespace QA97Service.Controllers
                 ClassName = r.Class.Name,
                 UserId = r.UserId,
                 UserName = r.User.FullName,
+             
                 CreatedDate = r.CreatedDate,
                 DetailPlainText = r.QuestionDetailPlainText,
                 DetailRichText = r.QuestionDetailRichText,
@@ -289,6 +293,7 @@ namespace QA97Service.Controllers
                 ClassName = r.Class.Name,
                 UserId = r.UserId,
                 UserName = r.User.FullName,
+              
                 CreatedDate = r.CreatedDate,
                 DetailPlainText = r.QuestionDetailPlainText,
                 DetailRichText = r.QuestionDetailRichText,
@@ -380,6 +385,7 @@ namespace QA97Service.Controllers
                 ClassName = r.Class.Name,
                 UserId = r.UserId,
                 UserName = r.User.FullName,
+                UserImage = r.User.UserImages.FirstOrDefault().ImageUrl,
                 CreatedDate = r.CreatedDate,
                 DetailPlainText = r.QuestionDetailPlainText,
                 DetailRichText = r.QuestionDetailRichText,

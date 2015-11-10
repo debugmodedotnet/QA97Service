@@ -74,7 +74,7 @@ namespace QA97Service.Controllers
         }
 
         // POST: api/Answers
-        [ResponseType(typeof(Answer))]
+        [ResponseType(typeof(AnswerViewModel))]
         public IHttpActionResult PostAnswer(Answer answer)
         {
             string idOfUserAnswering = (from r in db.Users where r.UserName == answer.UserId select r.Id).FirstOrDefault();
@@ -83,7 +83,7 @@ namespace QA97Service.Controllers
             answer.ModifiedDate = DateTime.Now;
             answer.CreatedBy = "Foo";
             answer.UserId = idOfUserAnswering;
-            db.Answers.Add(answer);
+            Answer a= db.Answers.Add(answer);
 
             //Adding Points to User
             //UserPoint pointToUser = new UserPoint();
@@ -105,7 +105,25 @@ namespace QA97Service.Controllers
             //    db.Entry(userInPointTable).State = EntityState.Modified;
             //}
             //Saving to database
-            db.SaveChanges();          
+            db.SaveChanges();
+
+            // creating answer view model from answer 
+
+            //AnswerViewModel ansvm = new AnswerViewModel();
+
+            //ansvm.AnswerDetailPlainText = a.AnswerDetailPlainText;
+            //ansvm.AnswerDetailRichText = a.AnswerDetailRichText;
+            //ansvm.CreatedDate = a.CreatedDate;
+            //ansvm.Id = a.Id;
+            //ansvm.QuestionId = a.QuestionId;
+            //ansvm.Score = 10;
+            //ansvm.UserId = a.UserId;
+            //ansvm.UserName = a.User.FullName;
+
+
+
+
+
             return CreatedAtRoute("DefaultApi", new { id = answer.Id }, answer);
         }
 
@@ -152,7 +170,7 @@ namespace QA97Service.Controllers
                 CreatedDate = answer.CreatedDate,
                 Id = answer.Id,
                 QuestionId = answer.QuestionId,
-                // Score = 10,
+                Score = 10,
                 UserId = answer.UserId,
                 UserName = answer.User.FullName
             });
