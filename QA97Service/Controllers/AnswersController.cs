@@ -11,6 +11,9 @@ using System.Web.Http.Description;
 using QA97Service.Entities;
 using QA97Service.Models;
 using QA97Service.ViewModel;
+using System.Collections.Specialized;
+using System.Xml;
+using System.Web;
 
 namespace QA97Service.Controllers
 {
@@ -120,8 +123,25 @@ namespace QA97Service.Controllers
             //ansvm.UserId = a.UserId;
             //ansvm.UserName = a.User.FullName;
 
+            //send SMS update an answer is posted
+            string questionAskedBy = (from r in db.Questions where r.Id == answer.QuestionId select r.UserId).FirstOrDefault();
+            string questionTitle = (from r in db.Questions where r.Id == answer.QuestionId select r.QuestionTitle).FirstOrDefault();
+            string phoneNumber = (from r in db.Users where r.Id == questionAskedBy select r.PhoneNumber).FirstOrDefault();
+            if(phoneNumber != null)
+            {
+                string url = "http://qa97app.azurewebsites.net/client/#/questiondetails/" + answer.QuestionId;
+                XmlDocument xDoc =  ShortenURL(url);
+                if (xDoc.GetElementsByTagName("status_code")[0].InnerText == "200")
+                    url = xDoc.GetElementsByTagName("url")[0].InnerText;
+                string msg;
+                if (answer.AnswerDetailPlainText.Length < 100)
+                    msg = "New answer on Q#" + answer.QuestionId + ". Answer : " + answer.AnswerDetailPlainText + ".For more details visit " + url;
+                else
+                    msg = "New answer on Q#" + answer.QuestionId + ".For more details visit " + url;
 
-
+                SMSController sms = new SMSController();
+                string SMSresponse = sms.SendSMS(phoneNumber, msg);
+            }
 
 
             return CreatedAtRoute("DefaultApi", new { id = answer.Id }, answer);
@@ -171,7 +191,7 @@ namespace QA97Service.Controllers
                 Id = answer.Id,
                 QuestionId = answer.QuestionId,
                 Score = 10,
-                UserId = answer.UserId,
+                UserId = answer.User.UserName,
                 UserName = answer.User.FullName
             });
 
@@ -217,6 +237,23 @@ namespace QA97Service.Controllers
         private bool AnswerExists(int id)
         {
             return db.Answers.Count(e => e.Id == id) > 0;
+        }
+
+        public XmlDocument ShortenURL(string urlToShorten)
+        {
+            using (WebClient wb = new WebClient())
+            {
+                string data = string.Format("http://api.bitly.com/v3/shorten/?login={0}&apiKey={1}&longUrl={2}&format={3}",
+                "shubham0987",                             // Your username
+                "R_7e1ce7adf4078e7ab734fc77bf1fb5a1",                              // Your API key
+                HttpUtility.UrlEncode(urlToShorten),         // Encode the url we want to shorten
+                "xml");
+
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(wb.DownloadString(data));
+
+                return xmlDoc;
+            }
         }
     }
 }

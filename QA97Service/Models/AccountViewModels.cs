@@ -40,6 +40,17 @@ namespace QA97Service.Models
         public string PhoneNumber { get; set; }
     }
 
+    public class UserInfoViewModelCustom
+    {
+        public string Email { get; set; }
+
+        public string FullName { get; set; }
+
+        public string CityName { get; set; }
+
+        public string PhoneNumber { get; set; }
+    }
+
     public class UserLoginInfoViewModel
     {
         public string LoginProvider { get; set; }

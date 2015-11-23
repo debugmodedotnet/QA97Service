@@ -279,9 +279,7 @@ namespace QA97Service.Controllers
         [HttpGet]
         public List<QuestionViewModel> GetQuestions()
         {
-
-
-
+          
             List<QuestionViewModel> lstQuestions = new List<QuestionViewModel>();
 
             //Converting Questions to QuestionsViewModel 
@@ -297,7 +295,7 @@ namespace QA97Service.Controllers
                 CreatedDate = r.CreatedDate,
                 DetailPlainText = r.QuestionDetailPlainText,
                 DetailRichText = r.QuestionDetailRichText,
-                Score = r.QuestionVotes.Sum(x => x.Score),
+                Score = (int?)r.QuestionVotes.Sum(x => x.Score) ?? 0,
                 SubjectId = r.SubjectId,
                 SubjectName = r.Subject.Name,
                 Title = r.QuestionTitle,
@@ -363,9 +361,7 @@ namespace QA97Service.Controllers
             }
         }
 
-
-
-
+        
         //Questions asked by a user
         [HttpGet]
         public List<QuestionViewModel> QuestionsbyUser(string userName)
@@ -385,15 +381,15 @@ namespace QA97Service.Controllers
                 ClassName = r.Class.Name,
                 UserId = r.UserId,
                 UserName = r.User.FullName,
-                UserImage = r.User.UserImages.FirstOrDefault().ImageUrl,
+                //UserImage = r.User.UserImages.FirstOrDefault().ImageUrl,
                 CreatedDate = r.CreatedDate,
                 DetailPlainText = r.QuestionDetailPlainText,
                 DetailRichText = r.QuestionDetailRichText,
-                Score = r.QuestionVotes.Sum(x => x.Score),
+                Score = (int?)r.QuestionVotes.Sum(x => x.Score) ?? 0,
                 SubjectId = r.SubjectId,
                 SubjectName = r.Subject.Name,
                 Title = r.QuestionTitle,
-                NumberOfAnswers = r.Answers.Count
+                NumberOfAnswers = (int?)r.Answers.Count ?? 0
 
             }).ToList();
 

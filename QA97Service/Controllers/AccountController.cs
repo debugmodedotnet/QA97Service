@@ -83,6 +83,22 @@ namespace QA97Service.Controllers
             };
         }
 
+        //Custom User Info
+        [OverrideAuthentication]
+        [AllowAnonymous]
+        public UserInfoViewModelCustom GetUserInfoCustom(string id)
+        {
+            //ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
+            var userDetail = UserManager.FindByName(id);   
+            return new UserInfoViewModelCustom
+            {
+                Email = userDetail.Email,
+                FullName = userDetail.FullName,
+                CityName = userDetail.CityName,
+                PhoneNumber = userDetail.PhoneNumber
+            };
+        }
+
         // POST api/Account/Logout
         [Route("Logout")]
         public IHttpActionResult Logout()
@@ -345,17 +361,36 @@ namespace QA97Service.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email,FullName=model.FullName};
+            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email,FullName=model.FullName, PhoneNumber=model.PhoneNumber};
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
-
+            
             if (!result.Succeeded)
             {
                 return GetErrorResult(result);
             }
-
+            var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+            EmailController email = new EmailController();
+            var emailResult = email.SendEmailConfirmation(code, model.FullName, model.Email);
             return Ok();
         }
+
+        //[AllowAnonymous]
+        //public async Task<IHttpActionResult> ConfirmEmail(string userId, string code)
+        //{
+        //    if (userId == null || code == null)
+        //    {
+        //        return View("Error");
+        //    }
+        //    var result = await UserManager.ConfirmEmailAsync(userId, code);
+        //    if (result.Succeeded)
+        //    {
+        //        return View("ConfirmEmail");
+        //    }
+        //    AddErrors(result);
+        //    return View();
+        //    SendGrid.
+        //}
 
         // POST api/Account/RegisterExternal
         [OverrideAuthentication]
