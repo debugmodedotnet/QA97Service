@@ -10,15 +10,6 @@ namespace QA97Service.Controllers
 {
     public class EmailController : ApiController
     {
-        public bool SendEmailConfirmation(string code, string name, string recipient)
-        {
-            string subject = "QA97 Email Confirmation - testing";
-            var callbackUrl = "testing";
-            string body = "<p>Hi  : " + name + ", <br> Please confirm your account by clicking this link: <a href=\""
-                                               + code + "\">link</a>. <br></p> <br>This is a part of email API testing</i></p><br> <p>Regards,<br> <i>Shubham Saxena <br> Developer QA97<i></p>";
-            return SendEmail(body, subject, recipient);
-        }
-
         [HttpGet]
         public bool SendEmail(string message, string subject, string recipient)
         {

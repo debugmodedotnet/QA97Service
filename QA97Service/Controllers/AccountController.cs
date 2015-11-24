@@ -370,27 +370,36 @@ namespace QA97Service.Controllers
                 return GetErrorResult(result);
             }
             var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+            code = HttpUtility.UrlEncode(code);
             EmailController email = new EmailController();
-            var emailResult = email.SendEmailConfirmation(code, model.FullName, model.Email);
+            string subject = "QA97 Email Confirmation";
+            string clientURL = "http://qa97service.azurewebsites.net/api";
+            string callbackurl = clientURL + "/Account/ConfirmEmail?userId=" + user.Id + "&code=" + code;
+            string body = "<p>Hi, " + model.FullName + ", <br> Please confirm your account by clicking this : <a href=\""
+                                               + callbackurl + "\">link</a>. <br></p> <br>This is a part of email API testing</i></p><br> <p>Regards,<br> <i>Shubham Saxena <br> Developer QA97<i></p>";
+            var emailResult = email.SendEmail(body, subject, model.Email);
             return Ok();
         }
 
-        //[AllowAnonymous]
-        //public async Task<IHttpActionResult> ConfirmEmail(string userId, string code)
-        //{
-        //    if (userId == null || code == null)
-        //    {
-        //        return View("Error");
-        //    }
-        //    var result = await UserManager.ConfirmEmailAsync(userId, code);
-        //    if (result.Succeeded)
-        //    {
-        //        return View("ConfirmEmail");
-        //    }
-        //    AddErrors(result);
-        //    return View();
-        //    SendGrid.
-        //}
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IHttpActionResult> ConfirmEmail(string userId, string code)
+        {
+            int returnCode = 0;
+            if (userId == null || code == null)
+            {
+                returnCode = 1;
+            }
+
+            var result = await UserManager.ConfirmEmailAsync(userId, code);
+            if (!result.Succeeded)
+            {
+                returnCode = 2;
+            }
+            string clientURL = "http://qa97app.azurewebsites.net/Client/index.html#/";
+            string redirectUri = clientURL + "ConfirmEmail/" + returnCode;
+            return Redirect(redirectUri);
+        }
 
         // POST api/Account/RegisterExternal
         [OverrideAuthentication]
