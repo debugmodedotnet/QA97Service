@@ -401,6 +401,49 @@ namespace QA97Service.Controllers
             return Redirect(redirectUri);
         }
 
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IHttpActionResult> GenerateForgetPasswordToken(string userName)
+        {
+            var user = await UserManager.FindByEmailAsync(userName);
+            if (userName == null || user == null)
+            {
+                return BadRequest(ModelState);
+            }
+            var token = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+            token = HttpUtility.UrlEncode(token);
+            string clientURL = "http://qa97app.azurewebsites.net/Client/index.html#/";
+            string callbackurl = clientURL + "ResetPassword/?id=" + user.Id + "&token=" + token;
+
+            EmailController email = new EmailController();
+            string subject = "QA97 Reset Password";
+            string body = "<p>Hi, " + user.FullName + ", <br> Please reset your password by clicking this : <a href=\""
+                                               + callbackurl + "\">link</a>. <br></p> <br>This is a part of email API testing</i></p><br> <p>Regards,<br> <i>Shubham Saxena <br> Developer QA97<i></p>";
+            var emailResult = email.SendEmail(body, subject, user.Email);
+            
+            return Ok();
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IHttpActionResult> ResetPassword(string userId, string token, string newPassword)
+        {
+            int returnCode = 0;
+            if (userId == null || token == null || newPassword == null)
+            {
+                returnCode = 1;
+            }
+
+            var result = await UserManager.ResetPasswordAsync(userId, token, newPassword);
+            if (!result.Succeeded)
+            {
+                returnCode = 2;
+            }
+            string clientURL = "http://qa97app.azurewebsites.net/Client/index.html#/";
+            string redirectUri = clientURL + "ResetPassword/" + returnCode;
+            return Redirect(redirectUri);
+        }
+
         // POST api/Account/RegisterExternal
         [OverrideAuthentication]
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
