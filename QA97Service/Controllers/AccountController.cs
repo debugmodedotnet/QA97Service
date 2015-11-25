@@ -428,6 +428,10 @@ namespace QA97Service.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> ResetPassword(string userId, string token, string newPassword)
         {
+
+            token = HttpUtility.UrlDecode(token);
+            token = token.Replace(' ', '+');
+
             int returnCode = 0;
             if (userId == null || token == null || newPassword == null)
             {
@@ -439,6 +443,7 @@ namespace QA97Service.Controllers
             {
                 returnCode = 2;
             }
+
             string clientURL = "http://qa97app.azurewebsites.net/Client/index.html#/";
             string redirectUri = clientURL + "ResetPassword/" + returnCode;
             return Redirect(redirectUri);
