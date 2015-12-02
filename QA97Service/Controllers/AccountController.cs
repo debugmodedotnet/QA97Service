@@ -16,6 +16,9 @@ using Microsoft.Owin.Security.OAuth;
 using QA97Service.Models;
 using QA97Service.Providers;
 using QA97Service.Results;
+using System.Net;
+using SendGrid;
+using System.Net.Mail;
 
 namespace QA97Service.Controllers
 {
@@ -369,15 +372,27 @@ namespace QA97Service.Controllers
             {
                 return GetErrorResult(result);
             }
-            var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-            code = HttpUtility.UrlEncode(code);
-            EmailController email = new EmailController();
-            string subject = "QA97 Email Confirmation";
-            string clientURL = "http://qa97service.azurewebsites.net/api";
-            string callbackurl = clientURL + "/Account/ConfirmEmail?userId=" + user.Id + "&code=" + code;
-            string body = "<p>Hi, " + model.FullName + ", <br> Please confirm your account by clicking this : <a href=\""
-                                               + callbackurl + "\">link</a>. <br></p> <br>This is a part of email API testing</i></p><br> <p>Regards,<br> <i>Shubham Saxena <br> Developer QA97<i></p>";
-            var emailResult = email.SendEmail(body, subject, model.Email);
+            //var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+            //code = HttpUtility.UrlEncode(code);
+            ////EmailController email = new EmailController();
+            //string subject = "QA97 Email Confirmation";
+            //string clientURL = "http://qa97service.azurewebsites.net/api";
+            //string callbackurl = clientURL + "/Account/ConfirmEmail?userId=" + user.Id + "&code=" + code;
+            //string body = "<p>Hi, " + model.FullName + ", <br> Please confirm your account by clicking this : <a href=\""
+            ////                                   + callbackurl + "\">link</a>. <br></p> <br>This is a part of email API testing</i></p><br> <p>Regards,<br> <i>Shubham Saxena <br> Developer QA97<i></p>";
+            ////email.SendEmail(body, subject, model.Email);
+
+            ////send grid
+            //SendGridMessage mail = new SendGridMessage();
+            //mail.From = new MailAddress("mail@shubhamsaxena.com");
+            //mail.AddTo(model.Email);
+            //mail.Subject = subject;
+            ////mail.Text = body;
+            //mail.Html = body;
+            //var credentials = new NetworkCredential("shubham0987", "");
+            //var transportWeb = new Web(credentials);
+            //await transportWeb.DeliverAsync(mail);
+
             return Ok();
         }
 
@@ -419,8 +434,7 @@ namespace QA97Service.Controllers
             string subject = "QA97 Reset Password";
             string body = "<p>Hi, " + user.FullName + ", <br> Please reset your password by clicking this : <a href=\""
                                                + callbackurl + "\">link</a>. <br></p> <br>This is a part of email API testing</i></p><br> <p>Regards,<br> <i>Shubham Saxena <br> Developer QA97<i></p>";
-            var emailResult = email.SendEmail(body, subject, user.Email);
-            
+            email.SendEmail(body, subject, user.Email);
             return Ok();
         }
 

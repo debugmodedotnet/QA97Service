@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace QA97Service.Controllers
@@ -11,11 +12,9 @@ namespace QA97Service.Controllers
     public class EmailController : ApiController
     {
         [HttpGet]
-        public bool SendEmail(string message, string subject, string recipient)
+        public async void SendEmail(string message, string subject, string recipient)
         {
-            try
-            {
-                string FromMail = "mail@shubhamsaxena.com";
+            try { string FromMail = "mail@shubhamsaxena.com";
                 string emailTo = recipient;
                 MailMessage mail = new MailMessage();
                 SmtpClient SmtpServer = new SmtpClient("mail.shubhamsaxena.com");
@@ -29,9 +28,11 @@ namespace QA97Service.Controllers
                 SmtpServer.Credentials = new System.Net.NetworkCredential("mail@shubhamsaxena.com", "shubham.0987");
                 SmtpServer.EnableSsl = false;
                 SmtpServer.Send(mail);
-                return true;
             }
-            catch (Exception e) { return false; }
+            catch (Exception e)
+            {
+                string s = "shubham";
+            }
         }
     }
 }
